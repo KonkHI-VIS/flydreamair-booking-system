@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlyDreamAir - Confirm Booking</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: rgb(26, 26, 26);
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #bookingSummary {
+            padding-bottom: 50px;
+        }
+
+        h1 {
+            color: #a9a9a9;
+            text-align: center;
+        }
+
+        table {
+            border-style: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 10px;
+            color: #a0a0a0;
+        }
+
+        .content {
+            text-align: center;
+            color: #a0a0a0;
+        }
+
+        td {
+            text-align: right;
+            padding-right: 30px;
+        }
+
+        #totalPrice {
+            margin-bottom: 200px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .confirm {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .cancel {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            color: #a0a0a0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        #priceText {
+            text-align: center;
+            font-size: x-large;
+            color: #a9a9a9;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container" id="bookingSummary">
+        <h1>Booking Summary</h1>
+        <table>
+
+            <tr id="headers">
+                <td class="header"><strong>Departing From</strong></td>
+                <td class="header"><strong>Arriving To</strong></td>
+            </tr>
+
+            <tr>
+                <td class="content" id="from">city, country</td>
+                <td class="content" id="to">city, country</td>
+            </tr>
+            
+            <tr>
+                <td class="content" id="departureDate">date</td>
+                <td class="content" id="returnDate">date</td>
+            </tr>
+
+
+        </table>
+
+
+    </div>
+
+    </div>
+
+    <div class="container" id="priceSummary">
+        <h1>Price Summary</h1>
+        <table>
+
+            <tr>
+                <td class="content">Ticket Cost:</td>
+                <td class="content">$0.00</td>
+            </tr>
+            <tr>
+                <td class="content">Quantity:</td>
+                <td class="content">0</td>
+            </tr>
+
+            <tr>
+                <td class="content">In-flight Services:</td>
+                <td class="content">$0.00</td>
+            </tr>
+
+        </table>
+
+        <p id="priceText">Total Price: <span id="TotalPrice">$0.00</span></p>
+        
+        <button type="button" class="confirm">Confirm Payment</button>
+        <button type="button" class="cancel">Cancel</button>
+    </div>
+
+        
+    <script>
+        window.onload = function() {
+            const bookingData = JSON.parse(localStorage.getItem("bookingData"));
+            if (bookingData) {
+                document.getElementById("bookingDetails").innerHTML = `
+                    From: ${bookingData.from}
+                    To: ${bookingData.to}
+                    Departure Date: ${bookingData.departureDate}
+                    Return Date: ${bookingData.returnDate}
+                    Passengers: ${bookingData.passengers}
+                `;
+            }
+        };
+
+    </script>
+
+</body>
+
+</html>
