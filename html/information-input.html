@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -65,49 +64,67 @@
 </head>
 <body>
     <div class="container">
-        <h1>Book Your Flight</h1>
-        <form>
-            <table>
-                <tr>
-                    <td>
-                        <label for="from">From:</label>
-                        <select id="from" name='from' required>
-                            <option value="1">Sydney, Australia</option>
-                            <option value="2"> Paris, France</option>
-                        </select>
-                    </td>
-                    <td>
-                        <label for="to">To:</label>
-                        <select id="to" name='to' required>
-                            <option value="1">Sydney, Australia</option>
-                            <option value="2"> Paris, France</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="departure-date">Departure Date:</label>
-                        <input type="date" id="departure-date" name="departure-date" required>
-                    </td>
-                    <td>
-                        <label for="return-date">Return Date:</label>
-                        <input type="date" id="return-date" name="return-date">
-                    </td>
-                </tr>
-            </table>
-            
+    <h1>Book Your Flight</h1>
+    <form id="bookingForm">
+    <table>
+        <tr>
+            <td>
+                <label for="from">From:</label>
+                <select id="from" name='from' required>
+                    <option value="Sydney, Australia">Sydney, Australia</option>
+                    <option value="Paris, France">Paris, France</option>
+                </select>
+            </td>
+            <td>
+                <label for="to">To:</label>
+                <select id="to" name='to' required>
+                    <option value="Sydney, Australia">Sydney, Australia</option>
+                    <option value="Paris, France">Paris, France</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="departure-date">Departure Date:</label>
+                <input type="date" id="departure-date" name="departure-date" required>
+            </td>
+            <td>
+                <label for="return-date">Return Date:</label>
+                <input type="date" id="return-date" name="return-date">
+            </td>
+        </tr>
+    </table>
 
-            <label for="passengers">Passengers:</label>
-            <select id="passengers" name="passengers" required>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
+    <label for="passengers">Passengers:</label>
+    <select id="passengers" name="passengers" required>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
 
-            <button type="submit">Book Now</button>
-        </form>
-    </div>
+    <button type="button" onclick="saveBookingData()">Book Now</button>
+</form>
+</div>
+
+<script>
+    function saveBookingData() {
+        // Get values from the form
+        const bookingDetails = {
+            from: document.getElementById("from").value,
+            to: document.getElementById("to").value,
+            departureDate: document.getElementById("departure-date").value,
+            returnDate: document.getElementById("return-date").value,
+            passengers: document.getElementById("passengers").value
+        };
+
+        // Store the data temporarily in localStorage
+        localStorage.setItem("bookingData", JSON.stringify(bookingDetails));
+
+        // Redirect to next page
+        window.location.href = "page2.html";
+    };
+</script>
 </body>
 </html>
