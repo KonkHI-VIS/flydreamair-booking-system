@@ -85,6 +85,7 @@
         </div>
 
         <script>
+            bookingData = "";
             function yearString(bookingDate){
                 return String(bookingDate.getFullYear()) + "-" + String(bookingDate.getMonth()).padStart(2, 0) + "-" + String(bookingDate.getDate()).padStart(2, 0);
             }
@@ -94,7 +95,7 @@
             }
 
             window.onload = function() {
-            const bookingData = JSON.parse(localStorage.getItem("bookingData"));
+            bookingData = JSON.parse(localStorage.getItem("bookingData"));
             bookingDate = new Date(bookingData.departureDateTime);
             if (bookingDate.getMinutes() >= 30){
                 bookingDate.setHours(bookingDate.getHours() + 1);
