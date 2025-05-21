@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -89,8 +90,8 @@
                 <input type="date" id="departure-date" name="departure-date" required>
             </td>
             <td>
-                <label for="return-date">Return Date:</label>
-                <input type="date" id="return-date" name="return-date">
+                <label for="return-date">Departure Time:</label>
+                <input type="time" id="departure-time" name="return-date">
             </td>
         </tr>
     </table>
@@ -109,13 +110,20 @@
 </div>
 
 <script>
-    function saveBookingData() {
+
+function saveBookingData() {
+        departTime = document.getElementById("departure-time").value;
+        departDate = document.getElementById("departure-date").value;
+        departDate = departDate.split("-");
+        departTime = departTime.split(':');
+
+        departDateTime = new Date(departDate[0], departDate[1], departDate[2], departTime[0], departTime[1])
+        
         // Get values from the form
         const bookingDetails = {
             from: document.getElementById("from").value,
             to: document.getElementById("to").value,
-            departureDate: document.getElementById("departure-date").value,
-            returnDate: document.getElementById("return-date").value,
+            Date, departureDateTime: departDateTime,
             passengers: document.getElementById("passengers").value
         };
 
