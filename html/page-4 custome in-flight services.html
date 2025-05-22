@@ -74,6 +74,35 @@
     }
   </style>
 </head>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelector(".button").addEventListener("click", function () {
+      const checkboxes = document.querySelectorAll("input[type='checkbox']");
+      const meal = document.getElementById("meal").value;
+
+      const data = {
+        optionalServices: [],
+        meaningfulChoices: [],
+        mealPreference: meal
+      };
+
+      checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+          const label = checkbox.parentElement.textContent.trim();
+          if (label.includes("Wi-Fi") || label.includes("headphones") || label.includes("tablet") || label.includes("Children")) {
+            data.optionalServices.push(label);
+          } else {
+            data.meaningfulChoices.push(label);
+          }
+        }
+      });
+
+      localStorage.setItem("inFlightServices", JSON.stringify(data));
+
+      window.location.href = "confirm-booking.html";
+    });
+  });
+</script>
 <body>
   <div class="container">
     <h1>Customize In-Flight Services</h1>
