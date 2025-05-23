@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fly Dream Air - Seat Map Availability</title>
   <style>
-    body {
+    body, button {
       font-family: "Monaco", monospace, Tahoma, Geneva, Verdana, sans-serif;
       background: #ffffff;
       color: #333;
@@ -161,17 +161,49 @@
     </div>
 
     <div class="button-container">
-      <a href="page-4 custome in-flight services.html" class="book-button">Book Selected Seats</a>
+      <button href="page-4 custome in-flight services.html" class="book-button" onClick = "submitSeats()">Book Selected Seats</button>
     </div>
+    <div id="errorBox" class="legend"></div>
   </main>
 
   <script>
+   
+    bookingData = JSON.parse(localStorage.getItem("bookingData"));
+        
+    passengers  = bookingData.passengers;
+
     const seats = document.querySelectorAll('.seat:not(.occupied)');
+    bookedSeats = passengers;
+    theSeats = [];
     seats.forEach(seat => {
       seat.addEventListener('click', () => {
-        seat.classList.toggle('selected');
+        if(seat.className == "seat selected"){
+            bookedSeats += 1;
+            theSeats  = theSeats.filter(item => item !== seat.innerHTML);
+            seat.classList.toggle('selected');
+        }
+        else if(bookedSeats > 0){
+            bookedSeats -=1;
+            theSeats.push(seat.innerHTML);
+            seat.classList.toggle('selected');
+        }
       });
     });
+
+    function submitSeats(){
+      if (bookedSeats > 1){
+        document.getElementById("errorBox").innerHTML = "Please select " + String(bookedSeats) + " more seats";
+      } else if (bookedSeats > 0){
+        document.getElementById("errorBox").innerHTML = "Please select " + String(bookedSeats) + " more seat";
+      } else {
+        document.getElementById("errorBox").innerHTML = "";
+
+        bookingData.selectedSeats = theSeats;
+        localStorage.setItem("bookingData", JSON.stringify("bookingData"));
+
+        window.location.href = "page-4";
+      }
+    }
   </script>
 </body>
 </html>
