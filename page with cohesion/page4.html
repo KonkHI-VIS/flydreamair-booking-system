@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <header>
+    <div class="header-logo">
+      <img src="fly dream icon.png" alt="Fly Dream Logo">
+      <div>
+        <h1>Fly Dream Air</h1>
+        <p>In-Flight Service</p>
+      </div>
+    </div>
+  </header>
+  <meta charset="UTF-8">
+  <title>Customize In-Flight Services</title>
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: rgb(26, 26, 26);
+    color: white;
+    margin: 0;
+    padding: 0;
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    }
+
+
+    header {
+    background-color: #002244;
+    color: white;
+    width: 100%;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .container {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 50px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
+    width: 750px;
+    margin-top: 40px;
+    }
+
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .header-logo img {
+      height: 60px;
+      margin-right: 20px;
+    }
+    .header-logo h1 {
+      margin: 0;
+    }
+    .header-logo p {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+
+    h1 {
+      color: #ffffff;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .section {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .box {
+      border: 1px solid #9b9b9b;
+      border-radius: 12px;
+      padding: 20px;
+      background-color: rgb(40, 40, 40);
+      width: 48%;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 8px 0;
+    }
+
+    select {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #6699cc;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .checkboxes {
+      margin-bottom: 20px;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .button {
+      padding: 14px 28px;
+      background-color: #007aff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Retrieve and merge data from previous pages
+    const bookingData = JSON.parse(localStorage.getItem("bookingData")) || {};
+    const flightData = JSON.parse(localStorage.getItem("flightData")) || {};
+    const passengerData = JSON.parse(localStorage.getItem("passengerData")) || {};
+
+    console.log("Booking Info from Page 1:", bookingData);
+    console.log("Flight Info from Page 2:", flightData);
+    console.log("Passenger Info from Page 3:", passengerData);
+
+    const passengerCount = parseInt(bookingData.passengers || "1");
+    const serviceArea = document.querySelector(".section");
+
+    for (let i = 0; i < passengerCount; i++) {
+      const container = document.createElement("div");
+      container.className = "box";
+      container.innerHTML = `
+        <strong>Passenger ${i + 1}</strong>
+        <label><input type="checkbox"> Purchase In-Flight Wi-Fi - $10</label>
+        <label><input type="checkbox"> Rent headphones - $3</label>
+        <label><input type="checkbox"> Rent a tablet with premium content - $15</label>
+        <label><input type="checkbox"> Children’s activity pack - free</label>
+        <label><input type="checkbox"> Carbon offset for this flight</label>
+        <label><input type="checkbox"> Receive only digital receipts</label>
+        <label>Meal Preference:
+          <select class="meal">
+            <option>Standard</option>
+            <option>Vegan</option>
+            <option>Halal</option>
+            <option>Hindu</option>
+            <option>Kosher</option>
+            <option>Gluten-Free</option>
+            <option>Low-Sodium</option>
+          </select>
+        </label>
+      `;
+      serviceArea.appendChild(container);
+    }
+
+    document.querySelector(".button").addEventListener("click", function () {
+      const passengerBoxes = document.querySelectorAll(".box");
+      const passengersData = [];
+
+      passengerBoxes.forEach((box, index) => {
+        const checkboxes = box.querySelectorAll("input[type='checkbox']");
+        const meal = box.querySelector("select").value;
+
+        const data = {
+          optionalServices: [],
+          meaningfulChoices: [],
+          mealPreference: meal,
+          serviceCost: 0
+        };
+
+        checkboxes.forEach((checkbox) => {
+          if (checkbox.checked) {
+            const label = checkbox.parentElement.textContent.trim();
+            if (label.includes("Wi-Fi")) {
+              data.optionalServices.push(label);
+              data.serviceCost += 10;
+            } else if (label.includes("headphones")) {
+              data.optionalServices.push(label);
+              data.serviceCost += 3;
+            } else if (label.includes("tablet")) {
+              data.optionalServices.push(label);
+              data.serviceCost += 15;
+            } else if (label.includes("Children")) {
+              data.optionalServices.push(label);
+            } else {
+              data.meaningfulChoices.push(label);
+            }
+          }
+        });
+
+        passengersData.push(data);
+      });
+
+      localStorage.setItem("inFlightServices", JSON.stringify(passengersData));
+
+      window.location.href = "page5.html";
+    });
+  });
+</script>
+<body>
+<div class="container">
+  <h1>Customize In-Flight Services</h1>
+
+  <div class="section">
+    <!-- Passenger service selections will be dynamically inserted here -->
+  </div>
+
+  <div class="button-container">
+    <button class="button">Confirm My Experience</button>
+  </div>
+</div>
+</body>
+</html>
