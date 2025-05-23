@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flight Booking</title>
+  <header>
+    <div class="header-logo">
+      <img src="logo.png" alt="Fly Dream Logo">
+      <div>
+        <h1>Fly Dream Air</h1>
+        <p>Flight Booking</p>
+      </div>
+    </div>
+  </header>
+  <style>
+    header {
+      background-color: #002244;
+      padding: 20px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: rgb(26, 26, 26);
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #ffffff;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+
+    }
+    label {
+      margin-top: 10px;
+      color: #a0a0a0;
+    }
+    input, select {
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: rgb(40, 40, 40);
+      color: rgb(191, 191, 191);
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    td {
+      text-align: right;
+      padding-right: 30px;
+    }
+    table {
+      border-style: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .header-logo img {
+      height: 60px;
+      margin-right: 20px;
+    }
+    .header-logo h1 {
+      margin: 0;
+    }
+    .header-logo p {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Book Your Flight</h1>
+  <form id="bookingForm">
+    <table>
+      <tr>
+        <td>
+          <label for="from">From:</label>
+          <select id="from" name='from' required>
+            <option value="Sydney, Australia">Sydney, Australia</option>
+            <option value="Paris, France">Paris, France</option>
+          </select>
+        </td>
+        <td>
+          <label for="to">To:</label>
+          <select id="to" name='to' required>
+            <option value="Sydney, Australia">Sydney, Australia</option>
+            <option value="Paris, France">Paris, France</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="departure-date">Departure Date:</label>
+          <input type="date" id="departure-date" name="departure-date" required>
+        </td>
+        <td>
+          <label for="return-date">Departure Time:</label>
+          <input type="time" id="departure-time" name="return-date">
+        </td>
+      </tr>
+    </table>
+
+    <label for="passengers">Passengers:</label>
+    <select id="passengers" name="passengers" required>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+
+    <button type="button" onclick="saveBookingData()">Book Now</button>
+  </form>
+</div>
+
+<textarea id="ticketText" style="display:none;"></textarea>
+
+<script>
+
+  function saveBookingData() {
+    departTime = document.getElementById("departure-time").value;
+    departDate = document.getElementById("departure-date").value;
+    departDate = departDate.split("-");
+    departTime = departTime.split(':');
+
+    departDateTime = new Date(departDate[0], departDate[1], departDate[2], departTime[0], departTime[1])
+
+    // Get values from the form
+    const bookingDetails = {
+      from: document.getElementById("from").value,
+      to: document.getElementById("to").value,
+      departureDateTime: departDateTime,
+      passengers: document.getElementById("passengers").value
+    };
+
+    // Calculate ticket price and total cost
+    const ticketPricePerPerson = 100;
+    const totalTicketCost = ticketPricePerPerson * bookingDetails.passengers;
+
+    const ticketContent = `
+    Fly Dream Air Ticket
+    ----------------------
+    From: ${bookingDetails.from}
+    To: ${bookingDetails.to}
+    Departure: ${departDateTime.toLocaleString()}
+    Passengers: ${bookingDetails.passengers}
+    Ticket Price: $${ticketPricePerPerson} x ${bookingDetails.passengers} = $${totalTicketCost}
+    ----------------------
+  `;
+    localStorage.setItem("ticketText", ticketContent);
+
+    // Store the data temporarily in localStorage
+    localStorage.setItem("bookingData", JSON.stringify(bookingDetails));
+
+    // Redirect to next page
+    window.location.href = "page2.html";
+  };
+</script>
+</body>
+</html>

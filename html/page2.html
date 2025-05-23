@@ -1,0 +1,172 @@
+<html>
+<head>
+  <header>
+    <div class="header-logo">
+      <img src="logo.png" alt="Fly Dream Logo">
+      <div>
+        <h1>Fly Dream Air</h1>
+        <p>Flight Booking</p>
+      </div>
+    </div>
+  </header>
+  <style>
+    header {
+      background-color: #002244;
+      padding: 20px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .header-logo img {
+      height: 60px;
+      margin-right: 20px;
+    }
+    .header-logo h1 {
+      margin: 0;
+    }
+    .header-logo p {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 70%;
+      margin: 50px auto;
+      background-color: rgb(26, 26, 26);
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      color: #a9a9a9;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+
+    }
+    label {
+      margin-top: 10px;
+      color: #a0a0a0;
+    }
+    input, select, td {
+      padding: 10px;
+      margin-top: 5px;
+      background-color: rgb(40, 40, 40);
+      color: rgb(191, 191, 191);
+      text-align: left;
+      padding-right: 30px;
+    }
+    button {
+      width: 70%;
+      display: block;
+      margin: auto;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    table {
+      width: 60%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Final Booking Details</h1>
+  <table class=>
+    <tr>
+      <td><b>To: </b><span id='arrival'>location</span></td>
+      <td><b>From: </b><span id='depart'>Location</span></td>
+    </tr>
+    <tr>
+      <td><b>Departure Day: </b><span id="dDate">dDate</span></td>
+      <td><b>Departure Time: </b><span id="dTime">dTime</span></td>
+    </tr>
+    <tr>
+      <td><b>Arrival Day: </b><span id='aDate'>aDate</span></td>
+      <td><b>Arrival Time: </b><span id='aTime'>aTime</span></td>
+    </tr>
+    <tr>
+      <td><b>Passengers: </b><span id="passengers">Amount of passengers</span></td>
+      <td><b>Sub-Total Cost: </b><span id="cost">Cost</span></td>
+    </tr>
+  </table>
+  <button type='button' onClick="submitInfo()">Confirm</button>
+
+</div>
+
+<script>
+  bookingData = "";
+  function yearString(bookingDate){
+    // getMonth() returns 0-based month, so add 1 for correct display
+    return String(bookingDate.getFullYear()) + "-" + String(bookingDate.getMonth() + 1).padStart(2, 0) + "-" + String(bookingDate.getDate()).padStart(2, 0);
+  }
+
+  function timeString(bookingDate){
+    return String(bookingDate.getHours()).padStart(2, "0") + ":" + String(bookingDate.getMinutes()).padStart(2, "0");
+  }
+
+  window.onload = function() {
+    bookingData = JSON.parse(localStorage.getItem("bookingData"));
+    bookingDate = new Date(bookingData.departureDateTime);
+    if (bookingDate.getMinutes() >= 30){
+      bookingDate.setHours(bookingDate.getHours() + 1);
+    }
+    bookingDate.setMinutes(0);
+    arrivalDate = new Date(bookingDate);
+    arrivalDate.setHours(bookingDate.getHours() + 3);
+    arrivalDate.setMinutes(bookingDate.getMinutes() + 30);
+    totalCost = Number(bookingData.passengers)*150;
+    if (bookingData) {
+      dateTime = new Date(bookingData.departureDateTime)
+      document.getElementById("arrival").innerHTML = bookingData.to;
+      document.getElementById("depart").innerHTML = bookingData.from;
+      document.getElementById("dDate").innerHTML = yearString(bookingDate);
+      document.getElementById("dTime").innerHTML = timeString(bookingDate);
+      document.getElementById("aDate").innerHTML = yearString(arrivalDate);
+      document.getElementById("aTime").innerHTML = timeString(arrivalDate);
+      document.getElementById("passengers").innerHTML = bookingData.passengers;
+      document.getElementById("cost").innerHTML = `$${totalCost.toFixed(2)}`;
+    }
+  };
+
+  function submitInfo(){
+    const bookingDetails = {
+      from: bookingData.from,
+      to: bookingData.to,
+      departureDateTime: bookingDate,
+      arrivalDateTime: arrivalDate,
+      passengers: bookingData.passengers,
+      cost: totalCost,
+      ticketCost: 150
+    };
+
+    // Store the data temporarily in localStorage under a different key to avoid overwriting page1 data
+    localStorage.setItem("flightData", JSON.stringify(bookingDetails));
+    window.location.href = "page3.html";
+  }
+</script>
+</body>
+</html>

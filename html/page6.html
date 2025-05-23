@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Success</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .success-box {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .success-icon {
+      font-size: 60px;
+      color: #4CAF50;
+    }
+
+    .success-title {
+      font-size: 28px;
+      margin-top: 20px;
+      color: #333;
+    }
+
+    .success-message {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #666;
+      display: none;
+    }
+
+    .download-button {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 24px;
+      background-color: #4CAF50;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .download-button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<div class="success-box">
+  <div class="success-icon">✈️</div>
+  <div class="success-title">Payment Successful</div>
+  <div class="success-message"></div>
+  <a id="downloadButton" href="#" class="download-button">Download Ticket</a>
+</div>
+</body>
+<script>
+  const bookingData = JSON.parse(localStorage.getItem("bookingData")) || {};
+  const flightData = JSON.parse(localStorage.getItem("flightData")) || {};
+  const inFlight = JSON.parse(localStorage.getItem("inFlightServices")) || {};
+  const passengers = parseInt(bookingData.passengers || "1");
+  const ticketSubtotal = parseFloat(flightData.ticketCost || "0") * passengers;
+  let serviceCost = 0;
+  if (Array.isArray(inFlight)) {
+    inFlight.forEach(p => {
+      serviceCost += parseFloat(p.serviceCost || "0");
+    });
+  } else {
+    serviceCost = parseFloat(inFlight.serviceCost || "0");
+  }
+  const total = ticketSubtotal + serviceCost;
+
+  document.querySelector(".success-message").innerHTML = `
+    <strong>From:</strong> ${bookingData.from || ""} <br>
+    <strong>To:</strong> ${bookingData.to || ""} <br>
+    <strong>Departure:</strong> ${flightData.departureDateTime ? new Date(flightData.departureDateTime).toLocaleString() : ""} <br>
+    <strong>Arrival:</strong> ${flightData.arrivalDateTime ? new Date(flightData.arrivalDateTime).toLocaleString() : ""} <br>
+    <strong>Passengers:</strong> ${bookingData.passengers || "1"} <br>
+    <strong>Ticket Cost:</strong> $${ticketSubtotal.toFixed(2)} <br>
+    <strong>In-flight Services:</strong> $${serviceCost.toFixed(2)} <br>
+    <strong>Total:</strong> $${total.toFixed(2)}
+  `;
+
+  const ticketText = `
+Fly Dream Air Ticket
+----------------------
+From: ${bookingData.from}
+To: ${bookingData.to}
+Departure: ${flightData.departureDateTime ? new Date(flightData.departureDateTime).toLocaleString() : "N/A"}
+Arrival: ${flightData.arrivalDateTime ? new Date(flightData.arrivalDateTime).toLocaleString() : "N/A"}
+Passengers: ${bookingData.passengers}
+Ticket Price: $${flightData.ticketCost} x ${bookingData.passengers} = $${ticketSubtotal.toFixed(2)}
+In-flight Services: $${serviceCost.toFixed(2)}
+Total: $${total.toFixed(2)}
+----------------------
+`;
+  localStorage.setItem("ticketText", ticketText);
+
+  document.getElementById("downloadButton").addEventListener("click", function () {
+    const ticketText = localStorage.getItem("ticketText") || "No ticket available.";
+    const blob = new Blob([ticketText], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "ticket.txt";
+    link.click();
+  });
+</script>
+</html>

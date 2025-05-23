@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<header>
+  <div class="header-logo">
+    <img src="logo.png" alt="Fly Dream Logo">
+    <div>
+      <h1>Fly Dream Air</h1>
+      <p>Flight Booking</p>
+    </div>
+  </div>
+</header>
+
+  <style>
+    header {
+      background-color: #002244;
+      padding: 20px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .header-logo img {
+      height: 60px;
+      margin-right: 20px;
+    }
+    .header-logo h1 {
+      margin: 0;
+    }
+    .header-logo p {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background-color: rgb(26, 26, 26);
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #bookingSummary {
+      padding-bottom: 50px;
+    }
+
+    h1 {
+      color: #a9a9a9;
+      text-align: center;
+    }
+
+    table {
+      border-style: 1px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      margin-top: 10px;
+      color: #a0a0a0;
+    }
+
+    .content {
+      text-align: center;
+      color: #a0a0a0;
+    }
+
+    td {
+      text-align: right;
+      padding-right: 30px;
+    }
+
+    #totalPrice {
+      margin-bottom: 200px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .confirm {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .cancel {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #fff;
+      color: #a0a0a0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    #priceText {
+      text-align: center;
+      font-size: x-large;
+      color: #a9a9a9;
+    }
+
+  </style>
+
+
+<body>
+<div class="container" id="bookingSummary">
+  <h1>Booking Summary</h1>
+  <table>
+
+    <tr id="headers">
+      <td class="header"><strong>Departing From</strong></td>
+      <td class="header"><strong>Arriving To</strong></td>
+    </tr>
+
+    <tr>
+      <td class="content" id="from">city, country</td>
+      <td class="content" id="to">city, country</td>
+    </tr>
+
+    <tr>
+      <td class="content" id="departureDate">date</td>
+      <td class="content" id="returnDate">date</td>
+    </tr>
+
+
+  </table>
+
+
+</div>
+
+</div>
+
+<div class="container" id="priceSummary">
+  <h1>Price Summary</h1>
+  <table>
+
+    <tr>
+      <td class="content">Ticket:</td>
+      <td class="content" id="ticketCostRow">$150</td>
+    </tr>
+    <tr>
+      <td class="content">In-flight Services:</td>
+      <td class="content" id="serviceCostRow">$0.00</td>
+    </tr>
+
+  </table>
+
+  <p id="priceText">Total Price: <span id="TotalPrice">$0.00</span></p>
+
+  <button type="button" class="confirm">Confirm Payment</button>
+  <button type="button" class="cancel">Cancel</button>
+</div>
+
+
+<script>
+  window.onload = function () {
+    const bookingData = JSON.parse(localStorage.getItem("bookingData")) || {};
+    const flightData = JSON.parse(localStorage.getItem("flightData")) || {};
+    const passengerData = JSON.parse(localStorage.getItem("passengerData")) || {};
+    const inFlightData = JSON.parse(localStorage.getItem("inFlightServices")) || {};
+    let serviceCost = 0;
+    if (Array.isArray(inFlightData)) {
+      inFlightData.forEach(p => {
+        serviceCost += parseFloat(p.serviceCost || "0");
+      });
+    } else {
+      serviceCost = parseFloat(inFlightData.serviceCost || "0");
+    }
+    serviceCost = parseFloat(flightData.serviceCost || "0") + serviceCost;
+
+    // add departure and arrival city
+    document.getElementById("from").textContent = bookingData.from || "N/A";
+    document.getElementById("to").textContent = bookingData.to || "N/A";
+
+    // D & A time
+    document.getElementById("departureDate").textContent = new Date(flightData.departureDateTime).toLocaleString() || "N/A";
+    document.getElementById("returnDate").textContent = new Date(flightData.arrivalDateTime).toLocaleString() || "N/A";
+
+    // services information
+    const passengers = bookingData.passengers || 0;
+    const ticketCostUnit = parseFloat(flightData.ticketCost || "0.00");
+    const ticketCostSubtotal = (ticketCostUnit * passengers).toFixed(2);
+    document.getElementById("ticketCostRow").textContent = `$${ticketCostUnit.toFixed(2)} x ${passengers} = $${ticketCostSubtotal}`;
+    document.getElementById("serviceCostRow").textContent = `$${serviceCost.toFixed(2)}`;
+    document.getElementById("TotalPrice").textContent = `$${(parseFloat(ticketCostSubtotal) + serviceCost).toFixed(2)}`;
+
+    // Show selected in-flight services names (if any)
+    if (inFlightData.optionalServices && Array.isArray(inFlightData.optionalServices) && inFlightData.optionalServices.length > 0) {
+      // Find the table under #priceSummary
+      var priceTable = document.querySelector("#priceSummary table");
+      // Find the row for "In-flight Services:"
+      var rows = priceTable.getElementsByTagName("tr");
+      var insertIndex = -1;
+      for (var i = 0; i < rows.length; i++) {
+        if (
+          rows[i].children.length > 0 &&
+          rows[i].children[0].textContent.trim() === "In-flight Services:"
+        ) {
+          insertIndex = i;
+          break;
+        }
+      }
+      // Insert after the "In-flight Services:" row
+      if (insertIndex !== -1) {
+        inFlightData.optionalServices.forEach(function(service) {
+          var tr = document.createElement("tr");
+          var tdName = document.createElement("td");
+          tdName.className = "content";
+          tdName.textContent = service;
+          var tdEmpty = document.createElement("td");
+          tdEmpty.className = "content";
+          tdEmpty.textContent = "";
+          tr.appendChild(tdName);
+          tr.appendChild(tdEmpty);
+          // Insert after the "In-flight Services:" row, so increment index accordingly
+          if (rows[insertIndex].nextSibling) {
+            priceTable.insertBefore(tr, rows[insertIndex].nextSibling);
+          } else {
+            priceTable.appendChild(tr);
+          }
+          insertIndex++;
+        });
+      }
+    }
+  };
+
+  document.querySelector('.confirm').addEventListener('click', function() {
+    window.location.href = "page6.html";
+  });
+
+  document.querySelector('.cancel').addEventListener('click', function() {
+    window.location.href = "page4.html";
+  });
+</script>
+
+</body>
+
+</html>
